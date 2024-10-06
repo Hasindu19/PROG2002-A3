@@ -1,5 +1,6 @@
-const dbcon = require("../crowdfunding_db"); // import the database
 const express = require("express");
+const dbcon = require("../crowdfunding_db");
+
 const router = express.Router();//map the RESTful endpoints,
 
 //connect to the MySQL database
@@ -16,14 +17,15 @@ connection.connect((err) => {
   }
 });
 
+//Get method to Retrieve all active fundraisers
 router.get("/fundraisers", (req, res) => {
   const query = `
-      SELECT f.FUNDRAISER_ID, f.ORGANIZER, f.CAPTION, f.TARGET_FUNDING, 
-             f.CURRENT_FUNDING, f.CITY, f.IMAGE_URL, c.NAME as categoryName
-      FROM FUNDRAISER f
-      JOIN CATEGORY c ON f.CATEGORY_ID = c.CATEGORY_ID
-      WHERE f.ACTIVE = 1
-    `;
+    SELECT f.FUNDRAISER_ID, f.ORGANIZER, f.CAPTION, f.TARGET_FUNDING, 
+           f.CURRENT_FUNDING, f.CITY, f.IMAGE_URL, c.NAME as categoryName
+    FROM FUNDRAISER f
+    JOIN CATEGORY c ON f.CATEGORY_ID = c.CATEGORY_ID
+    WHERE f.ACTIVE = 1
+  `;
 
   connection.query(query, (err, fundraisers) => {
     if (err) {
@@ -55,12 +57,12 @@ router.get("/search", (req, res) => {
 
   // Start building the base SQL query
   let query = `
-      SELECT f.FUNDRAISER_ID, f.ORGANIZER, f.CAPTION, f.TARGET_FUNDING, 
-             f.CURRENT_FUNDING, f.CITY, f.IMAGE_URL, c.NAME as categoryName
-      FROM FUNDRAISER f
-      JOIN CATEGORY c ON f.CATEGORY_ID = c.CATEGORY_ID
-      WHERE f.ACTIVE = 1
-    `;
+    SELECT f.FUNDRAISER_ID, f.ORGANIZER, f.CAPTION, f.TARGET_FUNDING, 
+           f.CURRENT_FUNDING, f.CITY, f.IMAGE_URL, c.NAME as categoryName
+    FROM FUNDRAISER f
+    JOIN CATEGORY c ON f.CATEGORY_ID = c.CATEGORY_ID
+    WHERE f.ACTIVE = 1
+  `;
 
   // Array to store query parameters for prepared statement
   const queryParams = [];
@@ -151,6 +153,7 @@ router.get('/fundraiser/:id', (req, res) => {
   });
 });
 
+
 // POST Method to Insert a New Donation
 router.post('/donation', (req, res) => {
   const { date, amount, giver, fundraiserId } = req.body;
@@ -162,6 +165,95 @@ router.post('/donation', (req, res) => {
       return res.status(500).json({ message: 'Error inserting donation', error: err.message });
     }
     res.status(201).json({ message: 'Donation added successfully', donationId: result.insertId });
+  });
+});
+
+
+
+// POST Method to Insert a New Fundraiser
+router.post('/fundraisers', (req, res) => {
+  const { caption, organizer, targetFunding, city, categoryId, imageUrl } = req.body;
+
+  const query = `INSERT INTO FUNDRAISER (CAPTION, ORGANIZER, TARGET_FUNDING, CURRENT_FUNDING, CITY, ACTIVE, CATEGORY_ID, IMAGE_URL) VALUES (?, ?, ?, 0, ?, 1, ?, ?)`;
+
+  connection.query(query, [caption, organizer, targetFunding, city, categoryId, imageUrl], (err, result) => {
+    if (err) {
+      return res.status(500).json({ message: 'Error creating fundraiser', error: err.message });
+    }
+    res.status(201).json({ message: 'Fundraiser created successfully', fundraiserId: result.insertId });
+  });
+});
+
+
+// PUT Method to Update an Existing Fundraiser
+router.put('/fundraisers/:id', (req, res) => {
+  const fundraiserId = req.params.id;
+  const { caption, organizer, targetFunding, city, categoryId, imageUrl } = req.body;
+
+  const query = `UPDATE FUNDRAISER SET CAPTION = ?, ORGANIZER = ?, TARGET_FUNDING = ?, CITY = ?, CATEGORY_ID = ?, IMAGE_URL = ? WHERE FUNDRAISER_ID = ?`;
+
+  connection.query(query, [caption, organizer, targetFunding, city, categoryId, imageUrl, fundraiserId], (err, result) => {
+    if (err) {
+      return res.status(500).json({ message: 'Error updating fundraiser', error: err.message });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'Fundraiser not found' });
+    }
+
+    res.status(200).json({ message: 'Fundraiser updated successfully' });
+  });
+});
+
+
+
+//DELETE Method to Delete a Fundraiser
+router.delete('/fundraisers/:id', (req, res) => {
+  const fundraiserId = req.params.id;
+
+  // First, check if the fundraiser has any donations
+  const checkDonationsQuery = `SELECT COUNT(*) AS donationCount FROM DONATION WHERE FUNDRAISER_ID = ?`;
+
+  connection.query(checkDonationsQuery, [fundraiserId], (err, results) => {
+    if (err) {
+      return res.status(500).json({ message: 'Error checking donations', error: err.message });
+    }
+
+    // If donations exist, prevent deletion
+    if (results[0].donationCount > 0) {
+      return res.status(400).json({ message: 'Cannot delete fundraiser with donations' });
+    }
+
+    // If no donations, proceed to delete the fundraiser
+    const deleteFundraiserQuery = `DELETE FROM FUNDRAISER WHERE FUNDRAISER_ID = ?`;
+
+    connection.query(deleteFundraiserQuery, [fundraiserId], (err, result) => {
+      if (err) {
+        return res.status(500).json({ message: 'Error deleting fundraiser', error: err.message });
+      }
+
+      // Check if any rows were affected (if the fundraiser existed)
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ message: 'Fundraiser not found' });
+      }
+
+      res.status(200).json({ message: 'Fundraiser deleted successfully' });
+    });
+  });
+});
+
+// GET Method to Retrieve All Fundraisers (regardless of their status)
+router.get('/allfundraisers', (req, res) => {
+  const query = `
+    SELECT FUNDRAISER_ID, CAPTION, ORGANIZER, TARGET_FUNDING, CURRENT_FUNDING, CITY, ACTIVE
+    FROM FUNDRAISER
+  `;
+
+  connection.query(query, (err, results) => {
+    if (err) {
+      return res.status(500).json({ message: 'Error fetching fundraisers', error: err.message });
+    }
+    res.status(200).json(results);
   });
 });
 

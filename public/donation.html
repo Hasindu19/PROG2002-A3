@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Donate to Fundraiser</title>
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <!-- Header section can go here -->
+  <header>
+    <div class="my-nav">
+      <div class="container">
+        <div class="row">
+          <div class="nav-items">
+            <div class="logo">
+              <img src="assets/images/logo.png">
+            </div>
+            <div class="menu-toggle">
+              <div class="menu-hamburger"></div>
+            </div>
+            <div class="menu-items">
+              <div class="menu">
+                <ul>
+                  <li><a href="index.html">Home</a></li>
+                  <li><a href="search.html">Search Fundraisers</a></li>
+                  <li><a href="services.html">Services</a></li>
+                  <li><a href="contact-us.html">Contact Us</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="donation-form">
+      <div class="container">
+        <h2>Make a Donation</h2>
+
+        <!-- Display selected fundraiser details -->
+        <div id="fundraiserDetails" class="mt-3 mb-4">
+          <h4>Donating to: <span id="fundraiserName"></span></h4>
+          <p id="fundraiserCaption"></p>
+          <p><strong>Goal:</strong> $<span id="fundraiserGoal"></span></p>
+          <p><strong>Current Funding:</strong> $<span id="fundraiserCurrentFunding"></span></p>
+        </div>
+
+        <!-- Donation Form -->
+        <form id="donationForm">
+          <div class="form-group">
+            <label for="giver">Your Name:</label>
+            <input type="text" id="giver" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="amount">Donation Amount:</label>
+            <input type="number" id="amount" class="form-control" min="5" required>
+            <small class="form-text text-muted">Minimum donation is 5 AUD</small>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit my donation</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <br>
+
+    <!-- =====================>>>>>Footer Started>>>>>======================== -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-6 col-6">
+          <div class="footer-content">
+            <h2>About Us - Smart Charitables</h2>
+            <p>We are a dedicated charity organization, working to transform the lives of poor children through donations, education, healthcare, and advocacy. Join us in our mission to create a brighter future.</p>
+            <ul>
+              <li><i class="fab fa-facebook-f"></i></li>
+              <li><i class="fab fa-twitter"></i></li>
+              <li><i class="fab fa-google"></i></li>
+              <li><i class="fab fa-skype"></i></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-6">
+          <div class="footer-content">
+            <h2>Quick Links</h2>
+            <ol>
+              <li><a href="#"><i class="fal fa-angle-double-right"></i>Home</a></li>
+              <li><a href="#"><i class="fal fa-angle-double-right"></i>About Us</a></li>
+              <li><a href="#"><i class="fal fa-angle-double-right"></i>Services</a></li>
+              <li><a href="#"><i class="fal fa-angle-double-right"></i>Blog</a></li>
+              <li><a href="#"><i class="fal fa-angle-double-right"></i>Contact Us</a></li>
+            </ol>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-6">
+          <div class="footer-content">
+            <h2>Services</h2>
+            <ol>
+              <li><a href="#"><i class="fal fa-angle-double-right"></i>Home</a></li>
+              <li><a href="#"><i class="fal fa-angle-double-right"></i>About Us</a></li>
+              <li><a href="#"><i class="fal fa-angle-double-right"></i>Services</a></li>
+              <li><a href="#"><i class="fal fa-angle-double-right"></i>Blog</a></li>
+              <li><a href="#"><i class="fal fa-angle-double-right"></i>Contact Us</a></li>
+            </ol>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-6">
+          <div class="footer-content">
+            <h2>News Letters</h2>
+            <div class="form-group">
+              <input class="form-control" role="" name="email" type="email" placeholder="Enter Your Email">
+              <i class="fal fa-paper-plane"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="copy-right">
+      <div class="container">
+        <div class="copy-right-card">
+          <p>2024 @ All Rights Reserved</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/jquery-3.2.1.min.js"></script>
+  <script src="assets/js/bootstrap.min.js"></script>
+  <script src="assets/js/donation.js"></script>
+</body>
+</html>
