@@ -234,5 +234,20 @@ router.delete('/fundraisers/:id', (req, res) => {
   });
 });
 
+// GET Method to Retrieve All Fundraisers (regardless of their status)
+router.get('/allfundraisers', (req, res) => {
+  const query = `
+    SELECT FUNDRAISER_ID, CAPTION, ORGANIZER, TARGET_FUNDING, CURRENT_FUNDING, CITY, ACTIVE
+    FROM FUNDRAISER
+  `;
+
+  connection.query(query, (err, results) => {
+    if (err) {
+      return res.status(500).json({ message: 'Error fetching fundraisers', error: err.message });
+    }
+    res.status(200).json(results);
+  });
+});
+
 
 module.exports = router;
