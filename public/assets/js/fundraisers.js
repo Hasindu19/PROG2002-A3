@@ -4,12 +4,22 @@ const apiUrl = "http://localhost:3000/api/fundraisers"; // Replace with actual A
 async function getActiveFundraisers() {
   try {
     const response = await fetch(apiUrl);
+
+    // Log the response status to check if it's successful
+    console.log("Response status:", response.status);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
     const fundraisers = await response.json();
+    console.log(fundraisers); // Log to see the data being fetched
     displayFundraisers(fundraisers);
   } catch (error) {
     console.error("Error fetching the fundraisers:", error);
   }
 }
+
 function displayFundraisers(fundraisers) {
   const fundraiserList = document.getElementById("fundraiser-list");
   fundraiserList.innerHTML = ""; // Clear any existing content
