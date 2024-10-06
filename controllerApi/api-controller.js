@@ -1,5 +1,6 @@
-const dbcon = require("../crowdfunding_db"); // import the database
 const express = require("express");
+const dbcon = require("../crowdfunding_db");
+
 const router = express.Router();//map the RESTful endpoints,
 
 //connect to the MySQL database
@@ -16,14 +17,15 @@ connection.connect((err) => {
   }
 });
 
+//Get method to Retrieve all active fundraisers
 router.get("/fundraisers", (req, res) => {
   const query = `
-      SELECT f.FUNDRAISER_ID, f.ORGANIZER, f.CAPTION, f.TARGET_FUNDING, 
-             f.CURRENT_FUNDING, f.CITY, f.IMAGE_URL, c.NAME as categoryName
-      FROM FUNDRAISER f
-      JOIN CATEGORY c ON f.CATEGORY_ID = c.CATEGORY_ID
-      WHERE f.ACTIVE = 1
-    `;
+    SELECT f.FUNDRAISER_ID, f.ORGANIZER, f.CAPTION, f.TARGET_FUNDING, 
+           f.CURRENT_FUNDING, f.CITY, f.IMAGE_URL, c.NAME as categoryName
+    FROM FUNDRAISER f
+    JOIN CATEGORY c ON f.CATEGORY_ID = c.CATEGORY_ID
+    WHERE f.ACTIVE = 1
+  `;
 
   connection.query(query, (err, fundraisers) => {
     if (err) {
@@ -55,12 +57,12 @@ router.get("/search", (req, res) => {
 
   // Start building the base SQL query
   let query = `
-      SELECT f.FUNDRAISER_ID, f.ORGANIZER, f.CAPTION, f.TARGET_FUNDING, 
-             f.CURRENT_FUNDING, f.CITY, f.IMAGE_URL, c.NAME as categoryName
-      FROM FUNDRAISER f
-      JOIN CATEGORY c ON f.CATEGORY_ID = c.CATEGORY_ID
-      WHERE f.ACTIVE = 1
-    `;
+    SELECT f.FUNDRAISER_ID, f.ORGANIZER, f.CAPTION, f.TARGET_FUNDING, 
+           f.CURRENT_FUNDING, f.CITY, f.IMAGE_URL, c.NAME as categoryName
+    FROM FUNDRAISER f
+    JOIN CATEGORY c ON f.CATEGORY_ID = c.CATEGORY_ID
+    WHERE f.ACTIVE = 1
+  `;
 
   // Array to store query parameters for prepared statement
   const queryParams = [];
@@ -151,6 +153,7 @@ router.get('/fundraiser/:id', (req, res) => {
   });
 });
 
+
 // POST Method to Insert a New Donation
 router.post('/donation', (req, res) => {
   const { date, amount, giver, fundraiserId } = req.body;
@@ -165,6 +168,8 @@ router.post('/donation', (req, res) => {
   });
 });
 
+
+
 // POST Method to Insert a New Fundraiser
 router.post('/fundraisers', (req, res) => {
   const { caption, organizer, targetFunding, city, categoryId, imageUrl } = req.body;
@@ -178,6 +183,7 @@ router.post('/fundraisers', (req, res) => {
     res.status(201).json({ message: 'Fundraiser created successfully', fundraiserId: result.insertId });
   });
 });
+
 
 // PUT Method to Update an Existing Fundraiser
 router.put('/fundraisers/:id', (req, res) => {
@@ -198,6 +204,8 @@ router.put('/fundraisers/:id', (req, res) => {
     res.status(200).json({ message: 'Fundraiser updated successfully' });
   });
 });
+
+
 
 //DELETE Method to Delete a Fundraiser
 router.delete('/fundraisers/:id', (req, res) => {
@@ -248,6 +256,5 @@ router.get('/allfundraisers', (req, res) => {
     res.status(200).json(results);
   });
 });
-
 
 module.exports = router;
