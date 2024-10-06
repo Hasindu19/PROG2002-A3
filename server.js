@@ -1,11 +1,14 @@
 const express = require("express");
 const cors = require("cors"); // Add CORS middleware
+const bodyParser = require('body-parser');  
 
-const apiController = require("./controllerApi/api-controller");
+const apiController = require("./controllerAPI/api-controll");
 
 const app = express();
-
-app.use(cors()); // Enable CORS for all routes
+// Middleware for parsing JSON and URL-encoded form data
+app.use(bodyParser.json());  // Parse application/json
+app.use(bodyParser.urlencoded({ extended: true }));  // Parse application/x-www-form-urlencoded
+app.use(cors());
 
 // Use the router for API endpoints
 app.use('/api', apiController)
