@@ -179,4 +179,15 @@ router.post('/fundraisers', (req, res) => {
   });
 });
 
+// PUT Method to Update an Existing Fundraiser
+router.put('/fundraisers/:id', (req, res) => {
+  const fundraiserId = req.params.id;
+  const { caption, organizer, targetFunding, city, categoryId, imageUrl } = req.body;
+
+  const query = `UPDATE FUNDRAISER SET CAPTION = ?, ORGANIZER = ?, TARGET_FUNDING = ?, CITY = ?, CATEGORY_ID = ?, IMAGE_URL = ? WHERE FUNDRAISER_ID = ?`;
+
+
+});
+
+
 module.exports = router;
