@@ -165,4 +165,18 @@ router.post('/donation', (req, res) => {
   });
 });
 
+// POST Method to Insert a New Fundraiser
+router.post('/fundraisers', (req, res) => {
+  const { caption, organizer, targetFunding, city, categoryId, imageUrl } = req.body;
+
+  const query = `INSERT INTO FUNDRAISER (CAPTION, ORGANIZER, TARGET_FUNDING, CURRENT_FUNDING, CITY, ACTIVE, CATEGORY_ID, IMAGE_URL) VALUES (?, ?, ?, 0, ?, 1, ?, ?)`;
+
+  connection.query(query, [caption, organizer, targetFunding, city, categoryId, imageUrl], (err, result) => {
+    if (err) {
+      return res.status(500).json({ message: 'Error creating fundraiser', error: err.message });
+    }
+    res.status(201).json({ message: 'Fundraiser created successfully', fundraiserId: result.insertId });
+  });
+});
+
 module.exports = router;
