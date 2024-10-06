@@ -129,42 +129,68 @@
     <script src="assets/js/jquery-3.2.1.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
     <script>
-    document.addEventListener("DOMContentLoaded", function () {
-  // Get the query string parameter
+   document.addEventListener("DOMContentLoaded", function () {
+  // Get the query string parameter from the URL
   const urlParams = new URLSearchParams(window.location.search);
-  const fundraiserId = urlParams.get('id');
+  const fundraiserId = urlParams.get('id');  // Extract the fundraiser ID from the URL
 
-  // Fetch fundraiser details using the fundraiserId
+  // Fetch the fundraiser details using the fundraiser ID
   fetch(`http://localhost:3000/api/fundraiser/${fundraiserId}`)
-    .then(response => response.json())
+    .then(response => {
+      // Check if the response is okay
+      if (!response.ok) {
+        throw new Error(`Error fetching fundraiser: ${response.status}`);
+      }
+      return response.json();  // Parse the response data to JSON
+    })
     .then(data => {
+      // Log the fetched data for debugging
       console.log(data);
-      // Assuming data returns an object with the fundraiser details
+
+      // Get the element where the fundraiser details will be displayed
       const fundraiserInfo = document.getElementById('fundraiserInfo');
+
+      // Check if the data is returned correctly
       if (data) {
+        // Display the fundraiser details
         fundraiserInfo.innerHTML = `
-          <p><strong>Caption:</strong> ${data.CAPTION}</p>
-          <p><strong>Organizer:</strong> ${data.ORGANIZER}</p>
-          <p><strong>City:</strong> ${data.CITY}</p>
-          <p><strong>Category:</strong> ${data.categoryName}</p>
-          <p><strong>Goal:</strong> $${data.TARGET_FUNDING}</p>
-          <p><strong>Current Funding:</strong> $${data.CURRENT_FUNDING}</p>
-          <p><strong>Status:</strong> ${data.ACTIVE === 1 ? 'Active' : 'Inactive'}</p>
+          <p><strong>Caption:</strong> ${data.caption}</p>
+          <p><strong>Organizer:</strong> ${data.organizer}</p>
+          <p><strong>City:</strong> ${data.city}</p>
+          <p><strong>Category:</strong> ${data.category}</p>
+          <p><strong>Goal:</strong> $${data.targetFunding}</p>
+          <p><strong>Current Funding:</strong> $${data.currentFunding}</p>
+          <p><strong>Status:</strong> ${data.active}</p>
         `;
+
+        // Display the donations list
+        const donationsList = document.getElementById('donationsList');
+        if (data.donations && data.donations.length > 0) {
+          data.donations.forEach(donation => {
+            donationsList.innerHTML += `
+              <div class="donation-card">
+                <p><strong>${donation.giver}</strong> donated <strong>$${donation.amount}</strong> on ${donation.date}</p>
+              </div>
+            `;
+          });
+        } else {
+          donationsList.innerHTML = '<p>No donations yet.</p>';
+        }
       } else {
         fundraiserInfo.innerHTML = '<div class="alert alert-danger">Fundraiser not found.</div>';
       }
     })
-    .catch(() => {
+    .catch(error => {
+      // Handle any errors during the fetch process
+      console.error("Error fetching fundraiser details:", error);
       document.getElementById('fundraiserInfo').innerHTML = '<div class="alert alert-danger">Failed to retrieve fundraiser details. Please try again later.</div>';
     });
 
-  // Donate button click handler
+  // Donate button click handler (redirects to the donation page)
   document.getElementById('donateButton').addEventListener('click', function () {
-    alert('This feature is under construction.');
+    window.location.href = `donation.html?fundraiserId=${fundraiserId}`;  // Redirect to the donation page with the fundraiser ID in the URL
   });
 });
-
   </script>
   </body>
 
