@@ -151,4 +151,18 @@ router.get('/fundraiser/:id', (req, res) => {
   });
 });
 
+// POST Method to Insert a New Donation
+router.post('/donation', (req, res) => {
+  const { date, amount, giver, fundraiserId } = req.body;
+
+  const query = `INSERT INTO DONATION (DATE, AMOUNT, GIVER, FUNDRAISER_ID) VALUES (?, ?, ?, ?)`;
+
+  connection.query(query, [date, amount, giver, fundraiserId], (err, result) => {
+    if (err) {
+      return res.status(500).json({ message: 'Error inserting donation', error: err.message });
+    }
+    res.status(201).json({ message: 'Donation added successfully', donationId: result.insertId });
+  });
+});
+
 module.exports = router;
