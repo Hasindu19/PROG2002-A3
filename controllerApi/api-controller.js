@@ -186,7 +186,17 @@ router.put('/fundraisers/:id', (req, res) => {
 
   const query = `UPDATE FUNDRAISER SET CAPTION = ?, ORGANIZER = ?, TARGET_FUNDING = ?, CITY = ?, CATEGORY_ID = ?, IMAGE_URL = ? WHERE FUNDRAISER_ID = ?`;
 
+  connection.query(query, [caption, organizer, targetFunding, city, categoryId, imageUrl, fundraiserId], (err, result) => {
+    if (err) {
+      return res.status(500).json({ message: 'Error updating fundraiser', error: err.message });
+    }
 
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'Fundraiser not found' });
+    }
+
+    res.status(200).json({ message: 'Fundraiser updated successfully' });
+  });
 });
 
 
