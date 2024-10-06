@@ -199,5 +199,40 @@ router.put('/fundraisers/:id', (req, res) => {
   });
 });
 
+//DELETE Method to Delete a Fundraiser
+router.delete('/fundraisers/:id', (req, res) => {
+  const fundraiserId = req.params.id;
+
+  // First, check if the fundraiser has any donations
+  const checkDonationsQuery = `SELECT COUNT(*) AS donationCount FROM DONATION WHERE FUNDRAISER_ID = ?`;
+
+  connection.query(checkDonationsQuery, [fundraiserId], (err, results) => {
+    if (err) {
+      return res.status(500).json({ message: 'Error checking donations', error: err.message });
+    }
+
+    // If donations exist, prevent deletion
+    if (results[0].donationCount > 0) {
+      return res.status(400).json({ message: 'Cannot delete fundraiser with donations' });
+    }
+
+    // If no donations, proceed to delete the fundraiser
+    const deleteFundraiserQuery = `DELETE FROM FUNDRAISER WHERE FUNDRAISER_ID = ?`;
+
+    connection.query(deleteFundraiserQuery, [fundraiserId], (err, result) => {
+      if (err) {
+        return res.status(500).json({ message: 'Error deleting fundraiser', error: err.message });
+      }
+
+      // Check if any rows were affected (if the fundraiser existed)
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ message: 'Fundraiser not found' });
+      }
+
+      res.status(200).json({ message: 'Fundraiser deleted successfully' });
+    });
+  });
+});
+
 
 module.exports = router;
