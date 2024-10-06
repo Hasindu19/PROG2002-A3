@@ -104,29 +104,50 @@ router.get("/search", (req, res) => {
   });
 });
 
-router.get("/fundraiser/:id", (req, res) => {
-  const { id } = req.params;
+//Updated get method for assessment3 part 2
+router.get('/fundraiser/:id', (req, res) => {
+  const fundraiserId = req.params.id;
+
   const query = `
-      SELECT f.FUNDRAISER_ID, f.ORGANIZER, f.CAPTION, f.TARGET_FUNDING,f.ACTIVE, 
-             f.CURRENT_FUNDING, f.CITY, f.IMAGE_URL, c.NAME as categoryName
-      FROM FUNDRAISER f
-      JOIN CATEGORY c ON f.CATEGORY_ID = c.CATEGORY_ID
-      WHERE f.FUNDRAISER_ID = ? AND f.ACTIVE = 1
-    `;
+    SELECT f.FUNDRAISER_ID, f.CAPTION, f.ORGANIZER, f.TARGET_FUNDING, f.CURRENT_FUNDING, 
+           f.CITY, f.ACTIVE, f.IMAGE_URL, c.NAME as categoryName,
+           d.DONATION_ID, d.DATE, d.AMOUNT, d.GIVER
+    FROM FUNDRAISER f
+    JOIN CATEGORY c ON f.CATEGORY_ID = c.CATEGORY_ID
+    LEFT JOIN DONATION d ON f.FUNDRAISER_ID = d.FUNDRAISER_ID
+    WHERE f.FUNDRAISER_ID = ?
+  `;
 
-  connection.query(query, [id], (err, fundraiser) => {
+  connection.query(query, [fundraiserId], (err, results) => {
     if (err) {
-      return res.status(500).json({
-        message: "Failed to retrieve fundraiser",
-        error: err.message,
-      });
+      return res.status(500).json({ message: 'Error fetching fundraiser details', error: err.message });
     }
 
-    if (fundraiser.length === 0) {
-      return res.status(404).json({ message: "Fundraiser not found" });
+    // If no fundraiser found, return a 404
+    if (results.length === 0) {
+      return res.status(404).json({ message: 'Fundraiser not found' });
     }
 
-    res.status(200).json(fundraiser[0]);
+    // Format the result into an object that includes fundraiser details and donations
+    const fundraiser = {
+      fundraiserId: results[0].FUNDRAISER_ID,
+      caption: results[0].CAPTION,
+      organizer: results[0].ORGANIZER,
+      targetFunding: results[0].TARGET_FUNDING,
+      currentFunding: results[0].CURRENT_FUNDING,
+      city: results[0].CITY,
+      active: results[0].ACTIVE === 1 ? 'Active' : 'Inactive',
+      category: results[0].categoryName,
+      imageUrl: results[0].IMAGE_URL,
+      donations: results.filter(donation => donation.DONATION_ID !== null).map(donation => ({
+        donationId: donation.DONATION_ID,
+        date: donation.DATE,
+        amount: donation.AMOUNT,
+        giver: donation.GIVER
+      }))
+    };
+
+    res.status(200).json(fundraiser);
   });
 });
 
