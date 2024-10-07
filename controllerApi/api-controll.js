@@ -158,13 +158,23 @@ router.get('/fundraiser/:id', (req, res) => {
 router.post('/donation', (req, res) => {
   const { date, amount, giver, fundraiserId } = req.body;
 
-  const query = `INSERT INTO DONATION (DATE, AMOUNT, GIVER, FUNDRAISER_ID) VALUES (?, ?, ?, ?)`;
-
-  connection.query(query, [date, amount, giver, fundraiserId], (err, result) => {
+  // insert the donation into the DONATION table
+  const donationQuery = `INSERT INTO DONATION (DATE, AMOUNT, GIVER, FUNDRAISER_ID) VALUES (?, ?, ?, ?)`;
+  connection.query(donationQuery, [date, amount, giver, fundraiserId], (err, donationResult) => {
     if (err) {
       return res.status(500).json({ message: 'Error inserting donation', error: err.message });
     }
-    res.status(201).json({ message: 'Donation added successfully', donationId: result.insertId });
+
+    // update the fundraiser's current funding
+    const updateFundingQuery = `UPDATE FUNDRAISER SET CURRENT_FUNDING = CURRENT_FUNDING + ? WHERE FUNDRAISER_ID = ?`;
+    connection.query(updateFundingQuery, [amount, fundraiserId], (err, fundingResult) => {
+      if (err) {
+        return res.status(500).json({ message: 'Error updating fundraiser current funding', error: err.message });
+      }
+
+      // Respond with success if both operations succeed
+      res.status(201).json({ message: 'Donation added and fundraiser funding updated successfully', donationId: donationResult.insertId });
+    });
   });
 });
 
