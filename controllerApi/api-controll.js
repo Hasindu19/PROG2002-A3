@@ -1,7 +1,7 @@
 const express = require("express");
 const dbcon = require("../crowdfunding_db");
 
-const router = express.Router();//map the RESTful endpoints,
+const router = express.Router(); //map the RESTful endpoints,
 
 //connect to the MySQL database
 const connection = dbcon.getconnection();
@@ -107,7 +107,7 @@ router.get("/search", (req, res) => {
 });
 
 //Updated get method for assessment3 part 2
-router.get('/fundraiser/:id', (req, res) => {
+router.get("/fundraiser/:id", (req, res) => {
   const fundraiserId = req.params.id;
 
   const query = `
@@ -122,12 +122,17 @@ router.get('/fundraiser/:id', (req, res) => {
 
   connection.query(query, [fundraiserId], (err, results) => {
     if (err) {
-      return res.status(500).json({ message: 'Error fetching fundraiser details', error: err.message });
+      return res
+        .status(500)
+        .json({
+          message: "Error fetching fundraiser details",
+          error: err.message,
+        });
     }
 
     // If no fundraiser found, return a 404
     if (results.length === 0) {
-      return res.status(404).json({ message: 'Fundraiser not found' });
+      return res.status(404).json({ message: "Fundraiser not found" });
     }
 
     // Format the result into an object that includes fundraiser details and donations
@@ -138,87 +143,143 @@ router.get('/fundraiser/:id', (req, res) => {
       targetFunding: results[0].TARGET_FUNDING,
       currentFunding: results[0].CURRENT_FUNDING,
       city: results[0].CITY,
-      active: results[0].ACTIVE === 1 ? 'Active' : 'Inactive',
+      active: results[0].ACTIVE === 1 ? "Active" : "Inactive",
       category: results[0].categoryName,
       imageUrl: results[0].IMAGE_URL,
-      donations: results.filter(donation => donation.DONATION_ID !== null).map(donation => ({
-        donationId: donation.DONATION_ID,
-        date: donation.DATE,
-        amount: donation.AMOUNT,
-        giver: donation.GIVER
-      }))
+      donations: results
+        .filter((donation) => donation.DONATION_ID !== null)
+        .map((donation) => ({
+          donationId: donation.DONATION_ID,
+          date: donation.DATE,
+          amount: donation.AMOUNT,
+          giver: donation.GIVER,
+        })),
     };
 
     res.status(200).json(fundraiser);
   });
 });
 
-
 // POST Method to Insert a New Donation
-router.post('/donation', (req, res) => {
+router.post("/donation", (req, res) => {
   const { date, amount, giver, fundraiserId } = req.body;
 
-  // insert the donation into the DONATION table
+  // First, insert the donation into the DONATION table
   const donationQuery = `INSERT INTO DONATION (DATE, AMOUNT, GIVER, FUNDRAISER_ID) VALUES (?, ?, ?, ?)`;
-  connection.query(donationQuery, [date, amount, giver, fundraiserId], (err, donationResult) => {
-    if (err) {
-      return res.status(500).json({ message: 'Error inserting donation', error: err.message });
-    }
-
-    // update the fundraiser's current funding
-    const updateFundingQuery = `UPDATE FUNDRAISER SET CURRENT_FUNDING = CURRENT_FUNDING + ? WHERE FUNDRAISER_ID = ?`;
-    connection.query(updateFundingQuery, [amount, fundraiserId], (err, fundingResult) => {
+  connection.query(
+    donationQuery,
+    [date, amount, giver, fundraiserId],
+    (err, donationResult) => {
       if (err) {
-        return res.status(500).json({ message: 'Error updating fundraiser current funding', error: err.message });
+        return res
+          .status(500)
+          .json({ message: "Error inserting donation", error: err.message });
       }
 
-      // Respond with success if both operations succeed
-      res.status(201).json({ message: 'Donation added and fundraiser funding updated successfully', donationId: donationResult.insertId });
-    });
-  });
+      // Now, update the fundraiser's current funding
+      const updateFundingQuery = `UPDATE FUNDRAISER SET CURRENT_FUNDING = CURRENT_FUNDING + ? WHERE FUNDRAISER_ID = ?`;
+      connection.query(
+        updateFundingQuery,
+        [amount, fundraiserId],
+        (err, fundingResult) => {
+          if (err) {
+            return res
+              .status(500)
+              .json({
+                message: "Error updating fundraiser current funding",
+                error: err.message,
+              });
+          }
+
+          // Respond with success if both operations succeed
+          res
+            .status(201)
+            .json({
+              message:
+                "Donation added and fundraiser funding updated successfully",
+              donationId: donationResult.insertId,
+            });
+        }
+      );
+    }
+  );
 });
 
-
-
 // POST Method to Insert a New Fundraiser
-router.post('/fundraisers', (req, res) => {
-  const { caption, organizer, targetFunding, city, categoryId, imageUrl } = req.body;
+router.post("/fundraisers", (req, res) => {
+  const { caption, organizer, targetFunding, city, categoryId, imageUrl } =
+    req.body;
 
   const query = `INSERT INTO FUNDRAISER (CAPTION, ORGANIZER, TARGET_FUNDING, CURRENT_FUNDING, CITY, ACTIVE, CATEGORY_ID, IMAGE_URL) VALUES (?, ?, ?, 0, ?, 1, ?, ?)`;
 
-  connection.query(query, [caption, organizer, targetFunding, city, categoryId, imageUrl], (err, result) => {
-    if (err) {
-      return res.status(500).json({ message: 'Error creating fundraiser', error: err.message });
+  connection.query(
+    query,
+    [caption, organizer, targetFunding, city, categoryId, imageUrl],
+    (err, result) => {
+      if (err) {
+        return res
+          .status(500)
+          .json({ message: "Error creating fundraiser", error: err.message });
+      }
+      res
+        .status(201)
+        .json({
+          message: "Fundraiser created successfully",
+          fundraiserId: result.insertId,
+        });
     }
-    res.status(201).json({ message: 'Fundraiser created successfully', fundraiserId: result.insertId });
-  });
+  );
 });
-
 
 // PUT Method to Update an Existing Fundraiser
-router.put('/fundraisers/:id', (req, res) => {
+router.put("/fundraisers/:id", (req, res) => {
   const fundraiserId = req.params.id;
-  const { caption, organizer, targetFunding, city, categoryId, imageUrl } = req.body;
+  const {
+    caption,
+    organizer,
+    targetFunding,
+    currentFunding,
+    city,
+    categoryId,
+    imageUrl,
+  } = req.body;
 
-  const query = `UPDATE FUNDRAISER SET CAPTION = ?, ORGANIZER = ?, TARGET_FUNDING = ?, CITY = ?, CATEGORY_ID = ?, IMAGE_URL = ? WHERE FUNDRAISER_ID = ?`;
+  const query = `
+    UPDATE FUNDRAISER 
+    SET CAPTION = ?, ORGANIZER = ?, TARGET_FUNDING = ?, CURRENT_FUNDING = ?, CITY = ?, CATEGORY_ID = ?, IMAGE_URL = ? 
+    WHERE FUNDRAISER_ID = ?
+  `;
 
-  connection.query(query, [caption, organizer, targetFunding, city, categoryId, imageUrl, fundraiserId], (err, result) => {
-    if (err) {
-      return res.status(500).json({ message: 'Error updating fundraiser', error: err.message });
+  connection.query(
+    query,
+    [
+      caption,
+      organizer,
+      targetFunding,
+      currentFunding,
+      city,
+      categoryId,
+      imageUrl,
+      fundraiserId,
+    ],
+    (err, result) => {
+      if (err) {
+        return res
+          .status(500)
+          .json({ message: "Error updating fundraiser", error: err.message });
+      }
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ message: "Fundraiser not found" });
+      }
+
+      res.status(200).json({ message: "Fundraiser updated successfully" });
     }
-
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ message: 'Fundraiser not found' });
-    }
-
-    res.status(200).json({ message: 'Fundraiser updated successfully' });
-  });
+  );
 });
 
-
-
 //DELETE Method to Delete a Fundraiser
-router.delete('/fundraisers/:id', (req, res) => {
+router.delete("/fundraisers/:id", (req, res) => {
   const fundraiserId = req.params.id;
 
   // First, check if the fundraiser has any donations
@@ -226,12 +287,16 @@ router.delete('/fundraisers/:id', (req, res) => {
 
   connection.query(checkDonationsQuery, [fundraiserId], (err, results) => {
     if (err) {
-      return res.status(500).json({ message: 'Error checking donations', error: err.message });
+      return res
+        .status(500)
+        .json({ message: "Error checking donations", error: err.message });
     }
 
     // If donations exist, prevent deletion
     if (results[0].donationCount > 0) {
-      return res.status(400).json({ message: 'Cannot delete fundraiser with donations' });
+      return res
+        .status(400)
+        .json({ message: "Cannot delete fundraiser with donations" });
     }
 
     // If no donations, proceed to delete the fundraiser
@@ -239,21 +304,23 @@ router.delete('/fundraisers/:id', (req, res) => {
 
     connection.query(deleteFundraiserQuery, [fundraiserId], (err, result) => {
       if (err) {
-        return res.status(500).json({ message: 'Error deleting fundraiser', error: err.message });
+        return res
+          .status(500)
+          .json({ message: "Error deleting fundraiser", error: err.message });
       }
 
       // Check if any rows were affected (if the fundraiser existed)
       if (result.affectedRows === 0) {
-        return res.status(404).json({ message: 'Fundraiser not found' });
+        return res.status(404).json({ message: "Fundraiser not found" });
       }
 
-      res.status(200).json({ message: 'Fundraiser deleted successfully' });
+      res.status(200).json({ message: "Fundraiser deleted successfully" });
     });
   });
 });
 
 // GET Method to Retrieve All Fundraisers (regardless of their status)
-router.get('/allfundraisers', (req, res) => {
+router.get("/allfundraisers", (req, res) => {
   const query = `
     SELECT FUNDRAISER_ID, CAPTION, ORGANIZER, TARGET_FUNDING, CURRENT_FUNDING, CITY, ACTIVE
     FROM FUNDRAISER
@@ -261,7 +328,9 @@ router.get('/allfundraisers', (req, res) => {
 
   connection.query(query, (err, results) => {
     if (err) {
-      return res.status(500).json({ message: 'Error fetching fundraisers', error: err.message });
+      return res
+        .status(500)
+        .json({ message: "Error fetching fundraisers", error: err.message });
     }
     res.status(200).json(results);
   });
