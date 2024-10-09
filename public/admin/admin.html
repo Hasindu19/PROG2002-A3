@@ -85,3 +85,59 @@
             Fundraiser</button>
         </form>
       </section>
+      <!-- Update Fundraiser Form (Hidden initially) -->
+      <section id="updateFundraiserSection" class="mt-5" style="display: none;">
+        <h3>Update Fundraiser</h3>
+        <form id="updateFundraiserForm">
+          <input type="hidden" id="updateFundraiserId">
+
+          <div class="form-group">
+            <label for="updateCaption">Caption</label>
+            <input type="text" id="updateCaption" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label for="updateOrganizer">Organizer</label>
+            <input type="text" id="updateOrganizer" class="form-control"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label for="updateTargetFunding">Target Funding</label>
+            <input type="number" id="updateTargetFunding" class="form-control"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label for="updateCurrentFunding">Current Funding</label>
+            <input type="number" id="updateCurrentFunding" class="form-control"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label for="updateCity">City</label>
+            <input type="text" id="updateCity" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label for="updateCategory">Category</label>
+            <select id="updateCategory" class="form-control" required>
+              <!-- Categories will be populated dynamically -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="updateImageUrl">Image URL</label>
+            <input type="text" id="updateImageUrl" class="form-control"
+              required>
+          </div>
+
+          <button type="submit" class="btn btn-success">Update
+            Fundraiser</button>
+        </form>
+
+        <h4 class="mt-4">Donations</h4>
+        <ul id="donationsList" class="list-group">
+          <!-- Donations will be displayed here -->
+        </ul>
+      </section>
