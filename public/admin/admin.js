@@ -104,7 +104,8 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .then((data) => {
           alert(`New fundraiser created with ID: ${data.fundraiserId}`);
-          
+          // Optionally clear the form after submission
+          document.getElementById("newFundraiserForm").reset();
 
 
 
