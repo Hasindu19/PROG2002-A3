@@ -11,3 +11,15 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((data) => {
         const fundraiserList = document.getElementById("fundraiserList");
         fundraiserList.innerHTML = ""; // Clear existing list
+
+        data.forEach((fundraiser) => {
+            fundraiserList.innerHTML += `
+              <tr>
+                <td>${fundraiser.FUNDRAISER_ID}</td>
+                <td>${fundraiser.CAPTION}</td>
+                <td>${fundraiser.ORGANIZER}</td>
+                <td>${fundraiser.TARGET_FUNDING}</td>
+                <td>${fundraiser.CURRENT_FUNDING}</td>
+                <td>${fundraiser.CITY}</td>
+                <td>${fundraiser.ACTIVE === 1 ? "Active" : "Inactive"}</td>
+                <td>
