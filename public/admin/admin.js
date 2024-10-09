@@ -220,4 +220,25 @@ function loadDonations(fundraiserId) {
       });
   }
 
+  // Delete Fundraiser
+  window.deleteFundraiser = function (fundraiserId) {
+    if (confirm("Are you sure you want to delete this fundraiser?")) {
+      fetch(`${apiUrl}/fundraisers/${fundraiserId}`, {
+        method: "DELETE",
+      })
+        .then((response) => {
+          if (response.ok) {
+            alert("Fundraiser deleted");
+            loadFundraisers();
+          } else {
+            alert("Error deleting fundraiser");
+          }
+        })
+        .catch((error) => {
+          console.error("Error deleting fundraiser:", error);
+        });
+    }
+  };
+});
+
   
