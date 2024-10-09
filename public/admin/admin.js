@@ -38,4 +38,14 @@ document.addEventListener("DOMContentLoaded", function () {
           console.error("Error fetching fundraisers:", error);
         });
     }
+
+    // Fetch and populate the categories dropdown
+  function loadCategories() {
+    fetch(`${apiUrl}/categories`)
+      .then((response) => response.json())
+      .then((data) => {
+        const categoryDropdown = document.getElementById("newCategoryId");
+        categoryDropdown.innerHTML =
+          '<option value="" disabled selected>Select a category</option>'; // Reset dropdown options
+
   
