@@ -89,6 +89,11 @@ document.addEventListener("DOMContentLoaded", function () {
         imageUrl: document.getElementById("newImageUrl").value,
       };
 
+      // Make a POST request to add the fundraiser
+      fetch(`${apiUrl}/fundraisers`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+
 
 
   
