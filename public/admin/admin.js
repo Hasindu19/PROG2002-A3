@@ -106,6 +106,14 @@ document.addEventListener("DOMContentLoaded", function () {
           alert(`New fundraiser created with ID: ${data.fundraiserId}`);
           // Optionally clear the form after submission
           document.getElementById("newFundraiserForm").reset();
+          // Optionally reload the list of fundraisers
+          loadFundraisers(); // function to reload the fundraisers list
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          alert("Failed to create fundraiser. Please try again.");
+        });
+    });
 
 
 
