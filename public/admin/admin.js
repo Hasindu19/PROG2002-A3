@@ -93,6 +93,18 @@ document.addEventListener("DOMContentLoaded", function () {
       fetch(`${apiUrl}/fundraisers`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newFundraiser), // Send the form data as JSON
+      })
+        .then((response) => {
+          if (response.ok) {
+            return response.json(); // Parse the JSON response
+          } else {
+            throw new Error("Error creating fundraiser");
+          }
+        })
+        .then((data) => {
+          alert(`New fundraiser created with ID: ${data.fundraiserId}`);
+          
 
 
 
