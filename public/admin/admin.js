@@ -135,7 +135,18 @@ function loadUpdateCategories(selectedCategoryId) {
         console.error("Error fetching categories:", error);
       });
   }
-
+// Edit Fundraiser - Fill the form with existing data
+window.editFundraiser = function (fundraiserId) {
+    fetch(`${apiUrl}/fundraiser/${fundraiserId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        document.getElementById("updateFundraiserId").value = data.fundraiserId;
+        document.getElementById("updateCaption").value = data.caption;
+        document.getElementById("updateOrganizer").value = data.organizer;
+        document.getElementById("updateTargetFunding").value = data.targetFunding;
+        document.getElementById("updateCurrentFunding").value = data.currentFunding;
+        document.getElementById("updateCity").value = data.city;
+        document.getElementById("updateImageUrl").value = data.imageUrl;
 
 
   
