@@ -63,5 +63,32 @@ document.addEventListener("DOMContentLoaded", function () {
     // Call the loadCategories function when the page loads
   loadCategories();
 
+  // New Fundraiser Form Submission with Validation
+  document
+    .getElementById("newFundraiserForm")
+    .addEventListener("submit", function (e) {
+      e.preventDefault(); // Prevent form from submitting the default way
+
+      // Get the form values
+      const targetFunding = parseFloat(
+        document.getElementById("newTargetFunding").value
+      );
+
+      // Validation: Ensure target funding is greater than 0
+      if (targetFunding <= 0) {
+        alert("Target funding must be greater than 0.");
+        return;
+      }
+
+      const newFundraiser = {
+        caption: document.getElementById("newCaption").value,
+        organizer: document.getElementById("newOrganizer").value,
+        targetFunding: targetFunding,
+        city: document.getElementById("newCity").value,
+        categoryId: document.getElementById("newCategoryId").value,
+        imageUrl: document.getElementById("newImageUrl").value,
+      };
+
+
 
   
