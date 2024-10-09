@@ -150,6 +150,14 @@ window.editFundraiser = function (fundraiserId) {
 
     // Load categories for the update form and select the correct one
       loadUpdateCategories(data.categoryId);
+            // Show update form
+            document.getElementById("updateFundraiserSection").style.display = "block";
+            loadDonations(fundraiserId);
+          })
+          .catch((error) => {
+            console.error("Error fetching fundraiser:", error);
+          });
+      };
 
 
   
