@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Manage Fundraisers</title>
+    <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+  </head>
+
+  <body>
+    <!-- Admin Panel Header -->
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+          <a class="navbar-brand" href="admin.html">Admin Panel</a>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item"><a class="nav-link"
+                  href="../index.html">Client-Side</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container mt-5">
+      <h2>Manage Fundraisers</h2>
+
+      <!-- List of Fundraisers -->
+      <section id="fundraiserListSection" class="mt-4">
+        <h3>All Fundraisers</h3>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Caption</th>
+              <th>Organizer</th>
+              <th>Goal</th>
+              <th>Current Funding</th>
+              <th>City</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="fundraiserList">
+            <!-- Fundraisers will be dynamically loaded here -->
+          </tbody>
+        </table>
+      </section>
+
+      <!-- New Fundraiser Form -->
+      <section id="newFundraiserSection" class="mt-5">
+        <h3>Add New Fundraiser</h3>
+        <form id="newFundraiserForm">
+          <div class="form-group">
+            <label for="newCaption">Caption</label>
+            <input type="text" id="newCaption" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="newOrganizer">Organizer</label>
+            <input type="text" id="newOrganizer" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="newTargetFunding">Target Funding</label>
+            <input type="number" id="newTargetFunding" class="form-control"
+              required>
+          </div>
+          <div class="form-group">
+            <label for="newCity">City</label>
+            <input type="text" id="newCity" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="newCategoryId">Category</label>
+            <select id="newCategoryId" class="form-control" required>
+              <!-- Categories will be dynamically populated -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="newImageUrl">Image URL</label>
+            <input type="text" id="newImageUrl" class="form-control" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Save New
+            Fundraiser</button>
+        </form>
+      </section>
+      <!-- Update Fundraiser Form (Hidden initially) -->
+      <section id="updateFundraiserSection" class="mt-5" style="display: none;">
+        <h3>Update Fundraiser</h3>
+        <form id="updateFundraiserForm">
+          <input type="hidden" id="updateFundraiserId">
+
+          <div class="form-group">
+            <label for="updateCaption">Caption</label>
+            <input type="text" id="updateCaption" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label for="updateOrganizer">Organizer</label>
+            <input type="text" id="updateOrganizer" class="form-control"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label for="updateTargetFunding">Target Funding</label>
+            <input type="number" id="updateTargetFunding" class="form-control"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label for="updateCurrentFunding">Current Funding</label>
+            <input type="number" id="updateCurrentFunding" class="form-control"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label for="updateCity">City</label>
+            <input type="text" id="updateCity" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label for="updateCategory">Category</label>
+            <select id="updateCategory" class="form-control" required>
+              <!-- Categories will be populated dynamically -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="updateImageUrl">Image URL</label>
+            <input type="text" id="updateImageUrl" class="form-control"
+              required>
+          </div>
+
+          <!-- Update Fundraiser Form (Hidden initially) -->
+      <section id="updateFundraiserSection" class="mt-5" style="display: none;">
+        <h3>Update Fundraiser</h3>
+        <form id="updateFundraiserForm">
+          <input type="hidden" id="updateFundraiserId">
+
+          <div class="form-group">
+            <label for="updateCaption">Caption</label>
+            <input type="text" id="updateCaption" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label for="updateOrganizer">Organizer</label>
+            <input type="text" id="updateOrganizer" class="form-control"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label for="updateTargetFunding">Target Funding</label>
+            <input type="number" id="updateTargetFunding" class="form-control"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label for="updateCurrentFunding">Current Funding</label>
+            <input type="number" id="updateCurrentFunding" class="form-control"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label for="updateCity">City</label>
+            <input type="text" id="updateCity" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label for="updateCategory">Category</label>
+            <select id="updateCategory" class="form-control" required>
+              <!-- Categories will be populated dynamically -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="updateImageUrl">Image URL</label>
+            <input type="text" id="updateImageUrl" class="form-control"
+              required>
+          </div>
+
+          <button type="submit" class="btn btn-success">Update
+            Fundraiser</button>
+        </form>
+
+        <h4 class="mt-4">Donations</h4>
+        <ul id="donationsList" class="list-group">
+          <!-- Donations will be displayed here -->
+        </ul>
+      </section>
+    </main>
+
+    <br />
+
+    <script src="../assets/js/jquery-3.2.1.min.js"></script>
+    <script src="../assets/js/bootstrap.min.js"></script>
+    <script src="admin.js"></script>
+  </body>
+
+</html>
