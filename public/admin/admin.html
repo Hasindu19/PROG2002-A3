@@ -49,3 +49,39 @@
           </tbody>
         </table>
       </section>
+
+      <!-- New Fundraiser Form -->
+      <section id="newFundraiserSection" class="mt-5">
+        <h3>Add New Fundraiser</h3>
+        <form id="newFundraiserForm">
+          <div class="form-group">
+            <label for="newCaption">Caption</label>
+            <input type="text" id="newCaption" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="newOrganizer">Organizer</label>
+            <input type="text" id="newOrganizer" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="newTargetFunding">Target Funding</label>
+            <input type="number" id="newTargetFunding" class="form-control"
+              required>
+          </div>
+          <div class="form-group">
+            <label for="newCity">City</label>
+            <input type="text" id="newCity" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="newCategoryId">Category</label>
+            <select id="newCategoryId" class="form-control" required>
+              <!-- Categories will be dynamically populated -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="newImageUrl">Image URL</label>
+            <input type="text" id="newImageUrl" class="form-control" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Save New
+            Fundraiser</button>
+        </form>
+      </section>
