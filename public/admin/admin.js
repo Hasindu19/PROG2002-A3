@@ -148,5 +148,8 @@ window.editFundraiser = function (fundraiserId) {
         document.getElementById("updateCity").value = data.city;
         document.getElementById("updateImageUrl").value = data.imageUrl;
 
+    // Load categories for the update form and select the correct one
+      loadUpdateCategories(data.categoryId);
+
 
   
