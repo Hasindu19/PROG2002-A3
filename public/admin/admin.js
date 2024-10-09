@@ -47,7 +47,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const categoryDropdown = document.getElementById("newCategoryId");
         categoryDropdown.innerHTML =
           '<option value="" disabled selected>Select a category</option>'; // Reset dropdown options
-          // Populate dropdown with categories
+          
+    
+      // Populate dropdown with categories
         data.forEach((category) => {
             categoryDropdown.innerHTML += `
               <option value="${category.CATEGORY_ID}">${category.NAME}</option>
@@ -58,5 +60,8 @@ document.addEventListener("DOMContentLoaded", function () {
           console.error("Error fetching categories:", error);
         });
     }
+    // Call the loadCategories function when the page loads
+  loadCategories();
+
 
   
