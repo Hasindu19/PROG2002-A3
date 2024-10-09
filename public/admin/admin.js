@@ -158,6 +158,42 @@ window.editFundraiser = function (fundraiserId) {
             console.error("Error fetching fundraiser:", error);
           });
       };
+// Update Fundraiser Form Submission
+document
+.getElementById("updateFundraiserForm")
+.addEventListener("submit", function (e) {
+  e.preventDefault();
 
+  const updatedFundraiser = {
+    caption: document.getElementById("updateCaption").value,
+    organizer: document.getElementById("updateOrganizer").value,
+    targetFunding: document.getElementById("updateTargetFunding").value,
+    currentFunding: document.getElementById("updateCurrentFunding").value, // Include currentFunding in update
+    city: document.getElementById("updateCity").value,
+    categoryId: document.getElementById("updateCategory").value, // Include categoryId in update
+    imageUrl: document.getElementById("updateImageUrl").value, // Include imageUrl in update
+  };
+
+  const fundraiserId = document.getElementById("updateFundraiserId").value;
+
+  fetch(`${apiUrl}/fundraisers/${fundraiserId}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(updatedFundraiser),
+  })
+    .then((response) => {
+      if (response.ok) {
+        alert("Fundraiser updated!");
+        loadFundraisers();
+        document.getElementById("updateFundraiserSection").style.display =
+          "none";
+      } else {
+        alert("Error updating fundraiser");
+      }
+    })
+    .catch((error) => {
+      console.error("Error updating fundraiser:", error);
+    });
+});
 
   
