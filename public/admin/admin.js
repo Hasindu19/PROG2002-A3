@@ -23,3 +23,19 @@ document.addEventListener("DOMContentLoaded", function () {
                 <td>${fundraiser.CITY}</td>
                 <td>${fundraiser.ACTIVE === 1 ? "Active" : "Inactive"}</td>
                 <td>
+                <button class="btn btn-sm btn-warning" onclick="editFundraiser(${
+                    fundraiser.FUNDRAISER_ID
+                  })">Edit</button>
+                  <button class="btn btn-sm btn-danger" onclick="deleteFundraiser(${
+                    fundraiser.FUNDRAISER_ID
+                  })">Delete</button>
+                </td>
+              </tr>
+            `;
+          });
+        })
+        .catch((error) => {
+          console.error("Error fetching fundraisers:", error);
+        });
+    }
+  
