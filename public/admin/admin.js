@@ -115,6 +115,27 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
+    // Load categories into the update form
+function loadUpdateCategories(selectedCategoryId) {
+    fetch(`${apiUrl}/categories`)
+      .then((response) => response.json())
+      .then((data) => {
+        const categoryDropdown = document.getElementById("updateCategory");
+        categoryDropdown.innerHTML = '<option value="" disabled>Select a category</option>'; // Reset dropdown options
+  
+        // Populate dropdown with categories
+        data.forEach((category) => {
+          const selected = category.CATEGORY_ID == selectedCategoryId ? "selected" : ""; // Check if this is the selected category
+          categoryDropdown.innerHTML += `
+            <option value="${category.CATEGORY_ID}" ${selected}>${category.NAME}</option>
+          `;
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  }
+
 
 
   
