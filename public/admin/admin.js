@@ -196,4 +196,28 @@ document
     });
 });
 
+// Load donations for a specific fundraiser
+function loadDonations(fundraiserId) {
+    fetch(`${apiUrl}/fundraiser/${fundraiserId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        const donationsList = document.getElementById("donationsList");
+        donationsList.innerHTML = ""; // Clear existing list
+
+        if (data.donations.length > 0) {
+          data.donations.forEach((donation) => {
+            donationsList.innerHTML += `
+              <li class="list-group-item">${donation.giver} donated $${donation.amount} on ${donation.date}</li>
+            `;
+          });
+        } else {
+          donationsList.innerHTML =
+            '<li class="list-group-item">No donations yet.</li>';
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching donations:", error);
+      });
+  }
+
   
